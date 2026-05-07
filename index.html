@@ -369,7 +369,27 @@ tbody tr:hover{background:var(--paper);}
       <div class="dev-name">Dr. Shadi Obeidat</div>
     </div>
     <p class="cover-copyright">© 1999 The Ken Blanchard Companies · All rights reserved</p>
-    <p style="margin-top:8px;font-size:10px;color:rgba(255,255,255,0.15);cursor:pointer;" onclick="goAdmin()">Admin ↗</p>
+    <div style="margin-top:16px;">
+      <button onclick="goAdmin()" style="
+        background:rgba(255,255,255,0.08);
+        border:1.5px solid rgba(255,255,255,0.2);
+        border-radius:10px;
+        color:rgba(255,255,255,0.6);
+        font-family:'Inter',sans-serif;
+        font-size:13px;
+        font-weight:600;
+        padding:10px 24px;
+        cursor:pointer;
+        width:100%;
+        letter-spacing:0.5px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:6px;
+      ">
+        🔐 Admin Dashboard
+      </button>
+    </div>
   </div>
 </div>
 
@@ -377,7 +397,13 @@ tbody tr:hover{background:var(--paper);}
 <div id="quiz" class="screen">
   <div class="quiz-topbar">
     <div class="quiz-topbar-row">
-      <div class="topbar-logo">LBA<em>II</em></div>
+      <button onclick="retake()" style="
+        background:none;border:none;cursor:pointer;
+        font-size:13px;font-weight:600;color:var(--muted);
+        display:flex;align-items:center;gap:4px;padding:4px 0;
+        font-family:'Inter',sans-serif;
+      ">← Home</button>
+      <div class="topbar-logo" style="position:absolute;left:50%;transform:translateX(-50%);">LBA<em>II</em></div>
       <div class="topbar-counter"><strong id="q-current">1</strong> <span style="color:var(--muted)">/</span> 20</div>
     </div>
     <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
@@ -456,8 +482,33 @@ tbody tr:hover{background:var(--paper);}
     </div>
   </div>
   <div class="results-actions">
-    <button class="btn-retake" onclick="retake()">↺ Take Again</button>
-    <button class="btn-print" onclick="window.print()">🖨 Print / Save PDF</button>
+    <button onclick="retake()" style="
+      background:var(--gold);color:var(--ink);border:none;border-radius:var(--radius);
+      font-family:'Inter',sans-serif;font-size:16px;font-weight:700;
+      padding:17px;cursor:pointer;width:100%;min-height:56px;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      -webkit-appearance:none;
+    ">
+      🏠 Back to Home
+    </button>
+    <button onclick="window.print()" style="
+      background:var(--cream);color:var(--ink);border:none;border-radius:var(--radius);
+      font-family:'Inter',sans-serif;font-size:15px;font-weight:600;
+      padding:16px;cursor:pointer;width:100%;min-height:52px;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      -webkit-appearance:none;
+    ">
+      🖨 Print / Save PDF
+    </button>
+    <button onclick="retakeOnly()" style="
+      background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius);
+      font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+      padding:14px;cursor:pointer;width:100%;min-height:48px;
+      display:flex;align-items:center;justify-content:center;gap:6px;
+      -webkit-appearance:none;
+    ">
+      ↺ Retake Assessment
+    </button>
   </div>
 </div>
 
@@ -544,8 +595,8 @@ tbody tr:hover{background:var(--paper);}
 // ════════════════════════════════════════════════════
 // ⚙️  CONFIG — Replace with your Supabase credentials
 // ════════════════════════════════════════════════════
-var SUPABASE_URL    = 'sb_publishable_p1RJCv6KX8LUIZvmuriUEw_5SNuov66';     // e.g. https://abcxyz.supabase.co
-var SUPABASE_ANON   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBud3pteHNrZXJqaWF0d3FhY2dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDIyNzEsImV4cCI6MjA5MzcxODI3MX0.pSOeolxEtusm5vDpWRUSfHEnGZWnbE2zc6xCGYcP4tM'; // your anon/public key
+var SUPABASE_URL    = 'YOUR_SUPABASE_URL';     // e.g. https://abcxyz.supabase.co
+var SUPABASE_ANON   = 'YOUR_SUPABASE_ANON_KEY'; // your anon/public key
 var ADMIN_PASSWORD  = 'lbaii2024admin';         // change this!
 var TABLE_NAME      = 'lbaii_results';
 
@@ -1006,10 +1057,23 @@ function showScreen(id){
 }
 
 function retake(){
+  // Full reset — clear everything including name/email
   answers={}; currentQ=0;
+  participantName=''; participantEmail='';
   document.getElementById('inp-name').value='';
   document.getElementById('inp-email').value='';
+  document.getElementById('err-name').classList.remove('show');
+  document.getElementById('err-email').classList.remove('show');
+  document.getElementById('inp-name').classList.remove('error');
+  document.getElementById('inp-email').classList.remove('error');
   showScreen('cover');
+}
+
+function retakeOnly(){
+  // Keep name & email — just reset answers
+  answers={}; currentQ=0;
+  buildQuestions(); buildDots();
+  showScreen('quiz'); showQuestion(0);
 }
 </script>
 </body>
